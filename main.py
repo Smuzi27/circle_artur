@@ -1,7 +1,7 @@
 from PyQt5.QtGui import QPainter, QColor
 import sys
 import random
-from PyQt5 import uic
+from UI import Ui_MainWindow
 from PyQt5 import QtCore, QtWidgets
 
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
@@ -13,10 +13,10 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QMainWindow
 
 
-class Example(QMainWindow):
+class Example(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('UI.ui', self)
+        self.setupUi(self)
         self.flag = False
         self.pushButton.clicked.connect(self.draw)
         self.coords = []
@@ -24,7 +24,7 @@ class Example(QMainWindow):
     def draw(self):
         self.figure = 'circle'
         self.size = random.randint(10, 100)
-        self.color = (255, 255, 0)
+        self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         self.flag = True
         self.update()
 
@@ -40,10 +40,13 @@ class Example(QMainWindow):
             qp.end()
 
 
+def except_hook(cls, exception, traceback):
+    sys.__excepthook__(cls, exception, traceback)
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    sys.excepthook = except_hook
     ex = Example()
     ex.show()
     sys.exit(app.exec_())
